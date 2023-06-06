@@ -1,21 +1,30 @@
 #!/bin/bash
 
-apt install build-essential procps curl file git
+export DEBIAN_FRONTEND=noninteractive
+export USERNAME=`whoami`
 
-# Install Homebrew
+sudo apt-get update
+sudo apt-get -y install --no-install-recommends apt-utils dialog 2>&1
+sudo apt-get install -y \
+  apt-transport-https \
+  build-essential \
+  curl \
+  git \
+  jq \
+  lsb-release \
+  sudo \
+  unzip \
+  wget 
+
+sudo apt-get autoremove -y
+sudo rm -rf /var/lib/apt/lists/*
+
+# install homebrew
 NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Add Homebrew to PATH
-echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
-# Add Homebrew to FISH config
-echo 'eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)' >> ~/.config/fish/config.fish
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+/home/linuxbrew/.linuxbrew/bin/brew install \
+  gcc \
+  fish
+  fisher
 
-
-# Install Fish shell using Homebrew
-brew install gcc
-brew install fish
-
-# Set Fish as the default shell
-echo '/home/linuxbrew/.linuxbrew/bin/fish' | sudo tee -a /etc/shells
-chsh -s /home/linuxbrew/.linuxbrew/bin/fish
+(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> ~/.profile
