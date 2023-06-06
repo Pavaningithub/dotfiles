@@ -15,6 +15,10 @@ sudo apt-get install -y \
   sudo \
   unzip \
   wget 
+  
+sudo apt-add-repository ppa:fish-shell/release-3
+sudo apt update
+sudo apt install -y fish
 
 sudo apt-get autoremove -y
 sudo rm -rf /var/lib/apt/lists/*
@@ -22,9 +26,6 @@ sudo rm -rf /var/lib/apt/lists/*
 # install homebrew
 NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-/home/linuxbrew/.linuxbrew/bin/brew install \
-  gcc \
-  fish \
-  fisher
+/home/linuxbrew/.linuxbrew/bin/brew install gcc
 
 (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> ~/.profile
