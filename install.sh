@@ -24,8 +24,8 @@ sudo apt-get autoremove -y
 sudo rm -rf /var/lib/apt/lists/*
 
 # install homebrew
-NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+NONINTERACTIVE=1 /bin/bash -c "(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | /bin/bash
 
-/home/linuxbrew/.linuxbrew/bin/brew install gcc
-
-(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> ~/.profile
+touch ~/.config/fish/config.fish
+echo "set KUBE_EDITOR 'code --wait'" >> ~/.config/fish/config.fish
+echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >> ~/.config/fish/config.fish
