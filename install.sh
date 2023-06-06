@@ -24,7 +24,7 @@ NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ho
 
 /home/linuxbrew/.linuxbrew/bin/brew install \
   gcc \
-  fish
+  fish \
   fisher
 
 (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> ~/.profile
