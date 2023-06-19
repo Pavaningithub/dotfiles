@@ -26,5 +26,5 @@ sudo rm -rf /var/lib/apt/lists/*
 # install homebrew
 NONINTERACTIVE=1 /bin/bash -c "(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | /bin/bash
 
-echo "set KUBE_EDITOR 'code --wait'" >> ~/.config/fish/config.fish
-echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >> ~/.config/fish/config.fish
+fish -c echo "set KUBE_EDITOR 'code --wait'" >> ~/.config/fish/config.fish
+fish -c echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >> ~/.config/fish/config.fish
