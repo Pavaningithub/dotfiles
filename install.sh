@@ -31,9 +31,41 @@ NONINTERACTIVE=1 /bin/bash -c "(curl -fsSL https://raw.githubusercontent.com/Hom
 
 # Define the path to the config.fish file
 config_file="$HOME/.config/fish/config.fish"
+abbr_file="$HOME/.config/fish/conf.d/abbr.fish"
+
+# Create the directory if it doesn't exist
+mkdir -p "$(dirname "$config_file")"
+mkdir -p "$(dirname "$abbr_file")"
+
 # Create the config.fish file or overwrite it if it already exists
 cat <<EOF >"$config_file"
 # Your config.fish content goes here
 set KUBE_EDITOR 'code --wait'
 export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 EOF
+
+# Create the abbr.fish file or overwrite it if it already exists
+cat <<EOF >"$abbr_file"
+abbr --add kg kubectl get
+abbr --add k kubectl
+abbr --add kgp kubectl get pods
+abbr --add t terraform
+abbr --add ti terraform init
+abbr --add tp terraform plan
+abbr --add ta terraform apply
+abbr --add td terraform destroy
+abbr --add cls clear
+abbr --add gcm git commit -m
+abbr --add gc git clone
+abbr --add ns kubens
+abbr --add ctx kubectx
+EOF
+
+# install brew packages
+fish -c "brew install fzf"
+fish -c "brew install exa"
+fish -c "brew install lf"
+fish -c "install kubectx"
+fish -c "install yq"
+fish -c "install jid"
+fish -c "install istioctl"
