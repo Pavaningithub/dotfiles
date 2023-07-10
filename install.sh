@@ -26,5 +26,14 @@ sudo rm -rf /var/lib/apt/lists/*
 # install homebrew
 NONINTERACTIVE=1 /bin/bash -c "(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | /bin/bash
 
-fish -c echo "set KUBE_EDITOR 'code --wait'" >> ~/.config/fish/config.fish
-fish -c echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >> ~/.config/fish/config.fish
+# fish -c echo "set KUBE_EDITOR 'code --wait'" >> ~/.config/fish/config.fish
+# fish -c echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >> ~/.config/fish/config.fish
+
+# Define the path to the config.fish file
+config_file="$HOME/.config/fish/config.fish"
+# Create the config.fish file or overwrite it if it already exists
+cat <<EOF >"$config_file"
+# Your config.fish content goes here
+set KUBE_EDITOR 'code --wait'
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+EOF
