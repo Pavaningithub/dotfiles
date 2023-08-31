@@ -72,5 +72,5 @@ fish -c "brew install istioctl"
 fish -c "kubectl completion fish | source"
 
 # Install Fisher
-curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
-fisher install evanlucas/fish-kubectl-completions
+fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+fish -c "fisher install evanlucas/fish-kubectl-completions"
