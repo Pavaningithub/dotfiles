@@ -74,3 +74,4 @@ fish -c "kubectl completion fish | source"
 # Install Fisher
 fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
 fish -c "fisher install evanlucas/fish-kubectl-completions"
+fish -c "fisher install Ladicle/fish-kubectl-prompt"
