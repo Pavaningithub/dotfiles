@@ -68,8 +68,8 @@ fish -c "brew install lf"
 fish -c "brew install kubectx"
 fish -c "brew install yq"
 fish -c "brew install jid"
-fish -c "brew install istioctl"
-fish -c "kubectl completion fish | source"
+# fish -c "brew install istioctl"
+# fish -c "kubectl completion fish | source"
 
 # Install Fisher
 fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
