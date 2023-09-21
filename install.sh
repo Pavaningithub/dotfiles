@@ -61,17 +61,20 @@ abbr --add ns kubens
 abbr --add ctx kubectx
 EOF
 
+# Install Fisher
+fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+fish -c "fisher install evanlucas/fish-kubectl-completions"
+fish -c "fisher install Ladicle/fish-kubectl-prompt"
+
 # install brew packages
+# Running brew packages in the last as script is not proceeding post that
 fish -c "brew install fzf"
 fish -c "brew install exa"
 fish -c "brew install lf"
 fish -c "brew install kubectx"
 fish -c "brew install yq"
 fish -c "brew install jid"
-# fish -c "brew install istioctl"
-# fish -c "kubectl completion fish | source"
+fish -c "brew install istioctl"
+fish -c "kubectl completion fish | source"
 
-# Install Fisher
-fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
-fish -c "fisher install evanlucas/fish-kubectl-completions"
-fish -c "fisher install Ladicle/fish-kubectl-prompt"
+
