@@ -23,9 +23,6 @@ sudo apt install -y fish
 sudo apt-get autoremove -y
 sudo rm -rf /var/lib/apt/lists/*
 
-# install homebrew
-NONINTERACTIVE=1 /bin/bash -c "(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | /bin/bash
-
 # fish -c echo "set KUBE_EDITOR 'code --wait'" >> ~/.config/fish/config.fish
 # fish -c echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >> ~/.config/fish/config.fish
 
@@ -65,6 +62,9 @@ EOF
 fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
 fish -c "fisher install evanlucas/fish-kubectl-completions"
 fish -c "fisher install Ladicle/fish-kubectl-prompt"
+
+# install homebrew
+NONINTERACTIVE=1 /bin/bash -c "(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | /bin/bash
 
 # install brew packages
 # Running brew packages in the last as script is not proceeding post that
