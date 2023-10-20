@@ -68,7 +68,7 @@ NONINTERACTIVE=1 /bin/bash -c "(curl -fsSL https://raw.githubusercontent.com/Hom
 
 # install brew packages
 # Running brew packages in the last as script is not proceeding post that
-sudo apt-get install build-essential
+sudo apt-get install build-essential -y
 fish -c "brew install gcc"
 fish -c "brew install fzf"
 fish -c "brew install exa"
