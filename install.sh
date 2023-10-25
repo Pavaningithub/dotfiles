@@ -61,7 +61,7 @@ fish -c "fisher install evanlucas/fish-kubectl-completions"
 fish -c "fisher install Ladicle/fish-kubectl-prompt"
 
 # install homebrew
-/bin/bash -c "(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+/bin/bash -c "(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" | /bin/bash
 
 # install brew packages
 # Running brew packages in the last as script is not proceeding post that
