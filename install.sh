@@ -10,11 +10,8 @@ sudo apt-get install -y \
   build-essential \
   curl \
   git \
-  jq \
   lsb-release \
-  sudo \
-  unzip \
-  wget 
+  unzip 
   
 sudo apt-add-repository ppa:fish-shell/release-3
 sudo apt update
@@ -76,7 +73,6 @@ fish -c "brew install yq"
 fish -c "brew install jid"
 fish -c "brew install istioctl"
 fish -c "kubectl completion fish | source"
-sudo apt-get install build-essential -y
 fish -c "brew install gcc"
 
 
