@@ -20,9 +20,6 @@ sudo apt install -y fish
 sudo apt-get autoremove -y
 sudo rm -rf /var/lib/apt/lists/*
 
-# fish -c echo "set KUBE_EDITOR 'code --wait'" >> ~/.config/fish/config.fish
-# fish -c echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >> ~/.config/fish/config.fish
-
 # Define the path to the config.fish file
 config_file="$HOME/.config/fish/config.fish"
 abbr_file="$HOME/.config/fish/conf.d/abbr.fish"
@@ -34,8 +31,8 @@ mkdir -p "$(dirname "$abbr_file")"
 # Create the config.fish file or overwrite it if it already exists
 cat <<EOF >"$config_file"
 # Your config.fish content goes here
-set KUBE_EDITOR 'code --wait'
-export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+set -x KUBE_EDITOR 'code --wait'
+set -x PATH "/home/linuxbrew/.linuxbrew/bin:$PATH"
 EOF
 
 # Create the abbr.fish file or overwrite it if it already exists
@@ -56,7 +53,7 @@ abbr --add ctx kubectx
 EOF
 
 # Install Fisher
-fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | .; fisher install jorgebucaran/fisher"
 fish -c "fisher install evanlucas/fish-kubectl-completions"
 fish -c "fisher install Ladicle/fish-kubectl-prompt"
 
@@ -72,7 +69,5 @@ fish -c "brew install kubectx"
 fish -c "brew install yq"
 fish -c "brew install jid"
 fish -c "brew install istioctl"
-fish -c "kubectl completion fish | source"
+fish -c "kubectl completion fish | ."
 fish -c "brew install gcc"
-
-
