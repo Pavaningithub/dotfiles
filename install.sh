@@ -19,8 +19,8 @@ sudo apt-get install -y \
 wget https://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_11/amd64/fish_3.7.1-1_amd64.deb -O fish.deb
 sudo dpkg -i fish.deb
 
-sudo apt-get autoremove -y
-sudo rm -rf /var/lib/apt/lists/*
+# sudo apt-get autoremove -y
+# sudo rm -rf /var/lib/apt/lists/*
 
 # Define the path to the config.fish file
 config_file="$HOME/.config/fish/config.fish"
