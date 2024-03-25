@@ -13,9 +13,11 @@ sudo apt-get install -y \
   lsb-release \
   unzip 
   
-sudo apt-add-repository ppa:fish-shell/release-3
-sudo apt update
-sudo apt install -y fish
+# sudo apt-add-repository ppa:fish-shell/release-3
+# sudo apt update
+# sudo apt install -y fish
+wget https://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_11/amd64/fish_3.7.1-1_amd64.deb -O fish.deb
+sudo dpkg -i fish.deb
 
 sudo apt-get autoremove -y
 sudo rm -rf /var/lib/apt/lists/*
