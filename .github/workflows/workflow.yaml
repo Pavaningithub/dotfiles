@@ -1,0 +1,93 @@
+name: Create-Overlays
+
+on:
+  workflow_dispatch:
+    inputs:
+      CLOUD:
+        description: "CLOUD"
+        required: true
+        default: "azure"
+        type: choice
+        options:
+          - azure
+          - aws
+      REGION:
+        description: "REGION"
+        required: true
+        default: "eastus"
+        type: choice
+        options:
+          - us-east-1
+          - us-west-2
+          - eastus
+          - westus
+          - westus2
+      ENVIRONMENT:
+        description: "ENVIRONMENT"
+        required: true
+        default: "sbx"
+        type: choice
+        options:
+          - sbx
+          - dev
+          - stg
+          - prod
+
+permissions:
+  contents: read
+
+jobs:
+  create-overlays:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout k8s-deployment repo 🛎️
+        uses: actions/checkout@v4
+
+      - name: Create platform overlays
+        run: |
+          touch test1.yaml
+          echo "test" >> test1.yaml
+
+      - name: Create pull request for platform apps 📌
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: platform_overlays/${{ inputs.CLOUD }}-${{ inputs.REGION }}-${{ inputs.ENVIRONMENT }}-${{ github.run_id }}
+          delete-branch: true
+          title: "Create platform overlays ${{ inputs.CLOUD }}-${{ inputs.REGION }}-${{ inputs.ENVIRONMENT }}"
+          body: |
+            Create platform overlays ${{ inputs.CLOUD }}-${{ inputs.REGION }}-${{ inputs.ENVIRONMENT }}
+
+            Automated pull request
+          reviewers: |
+            ${{ github.actor }}
+            SGNL-ai/devops
+            SGNL-ai/product
+          labels: |
+            automated
+            env:${{ inputs.ENVIRONMENT }}
+            type:platform
+
+      - name: Create db and SGNL overlays
+        run: |
+          touch test2.yaml
+          echo "test" >> test2.yaml
+
+      - name: Create pull request for DB and SGNL apps  📌
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: db_sgnl_overlays/${{ inputs.CLOUD }}-${{ inputs.REGION }}-${{ inputs.ENVIRONMENT }}-${{ github.run_id }}
+          delete-branch: true
+          title: "Create DB and SGNL overlays ${{ inputs.CLOUD }}-${{ inputs.REGION }}-${{ inputs.ENVIRONMENT }}"
+          body: |
+            Create db and SGNL overlays ${{ inputs.CLOUD }}-${{ inputs.REGION }}-${{ inputs.ENVIRONMENT }}
+
+            Automated pull request
+          reviewers: |
+            ${{ github.actor }}
+            SGNL-ai/devops
+            SGNL-ai/product
+          labels: |
+            automated
+            env:${{ inputs.ENVIRONMENT }}
+            type:db-sgnl
