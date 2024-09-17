@@ -14,7 +14,7 @@ sudo apt-get install -y \
   unzip 
   
 if ! command -v fish &> /dev/null; then
-    sudo apt-add-repository ppa:fish-shell/release-3
+    sudo apt-add-repository --yes ppa:fish-shell/release-3
     sudo apt update
     sudo apt install -y fish
 fi
