@@ -19,9 +19,6 @@ if ! command -v fish &> /dev/null; then
     sudo apt install -y fish
 fi
 
-sudo apt-get install -y fish
-sudo dpkg -i fish.deb
-
 # sudo apt-get autoremove -y
 # sudo rm -rf /var/lib/apt/lists/*
 
@@ -68,7 +65,6 @@ fish -c "fisher install Ladicle/fish-kubectl-prompt"
 # install brew packages
 # Running brew packages in the last as script is not proceeding post that
 fish -c "brew install fzf"
-fish -c "brew install exa"
 fish -c "brew install lf"
 fish -c "brew install kubectx"
 fish -c "brew install yq"
