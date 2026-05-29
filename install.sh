@@ -319,7 +319,7 @@ end
 
 for brew_bin in /opt/homebrew/bin /usr/local/bin /home/linuxbrew/.linuxbrew/bin $HOME/.linuxbrew/bin
     if test -d "$brew_bin"
-        fish_add_path --move --path $brew_bin
+        fish_add_path --move --path "$brew_bin"
     end
 end
 EOF
@@ -348,7 +348,16 @@ install_fisher_plugins() {
 
   log "installing fish plugins"
   if ! fish -c 'functions -q fisher'; then
-    run fish -c 'curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher'
+    if [ "$DRY_RUN" = "1" ]; then
+      printf '+ curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish -o %s\n' '/tmp/fisher.fish'
+      printf '+ fish -c %q\n' 'source /tmp/fisher.fish; and fisher install jorgebucaran/fisher'
+    else
+      local fisher_file
+      fisher_file="$(mktemp)"
+      curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish -o "$fisher_file"
+      fish -c "source '$fisher_file'; and fisher install jorgebucaran/fisher"
+      rm -f "$fisher_file"
+    fi
   fi
 
   run fish -c 'fisher install evanlucas/fish-kubectl-completions Ladicle/fish-kubectl-prompt'
