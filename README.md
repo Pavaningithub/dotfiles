@@ -1,6 +1,6 @@
 # dotfiles
 
-Cross-platform dotfiles bootstrap for GitHub Codespaces, Linux, Ubuntu, and macOS.
+Cross-platform dotfiles bootstrap for GitHub Codespaces, Debian/Ubuntu Linux, and macOS.
 
 ## Usage
 
