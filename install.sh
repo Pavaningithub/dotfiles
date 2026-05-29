@@ -270,7 +270,7 @@ install_teleport() {
       if [ "$DRY_RUN" = "1" ]; then
         printf '+ curl -fsSL https://apt.releases.teleport.dev/gpg -o %s\n' '/tmp/teleport-archive-keyring.asc'
         printf '+ sudo install -m 0644 %s %s\n' '/tmp/teleport-archive-keyring.asc' "$keyring_file"
-        printf '+ printf %q %q | sudo tee /etc/apt/sources.list.d/teleport.list\n' '%s\n' "$repo_entry"
+        printf '+ printf %q | sudo tee /etc/apt/sources.list.d/teleport.list\n' "$repo_entry"
       else
         temp_key="$(mktemp)"
         curl -fsSL https://apt.releases.teleport.dev/gpg -o "$temp_key"
@@ -332,7 +332,7 @@ end
 
 for brew_bin in ${brew_candidates}
     if test -x "\$brew_bin"
-        eval ("\$brew_bin" shellenv)
+        eval (\$brew_bin shellenv)
         break
     end
 end
