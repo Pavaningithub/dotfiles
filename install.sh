@@ -234,7 +234,7 @@ install_teleport() {
     return 0
   fi
 
-  if [ "$PLATFORM" = "linux" ] && has_cmd apt-get && [ "${DISTRO}" = "ubuntu" -o "${DISTRO}" = "debian" ]; then
+  if [ "$PLATFORM" = "linux" ] && has_cmd apt-get && { [ "${DISTRO}" = "ubuntu" ] || [ "${DISTRO}" = "debian" ]; }; then
     ensure_sudo
 
     local apt_arch
@@ -254,6 +254,7 @@ install_teleport() {
       log "installing Teleport tsh with apt"
       local keyring_dir="/etc/apt/keyrings"
       local keyring_file="${keyring_dir}/teleport-archive-keyring.asc"
+      local temp_key
       local repo_entry="deb [signed-by=${keyring_file}"
       if [ -n "$apt_arch" ]; then
         repo_entry="${repo_entry} arch=${apt_arch}"
@@ -262,10 +263,14 @@ install_teleport() {
 
       as_root install -d -m 0755 "$keyring_dir"
       if [ "$DRY_RUN" = "1" ]; then
-        printf '+ curl -fsSL https://apt.releases.teleport.dev/gpg > %s\n' "$keyring_file"
+        printf '+ curl -fsSL https://apt.releases.teleport.dev/gpg -o %s\n' '/tmp/teleport-archive-keyring.asc'
+        printf '+ sudo install -m 0644 %s %s\n' '/tmp/teleport-archive-keyring.asc' "$keyring_file"
         printf '+ printf %q %q | sudo tee /etc/apt/sources.list.d/teleport.list\n' '%s\n' "$repo_entry"
       else
-        curl -fsSL https://apt.releases.teleport.dev/gpg | as_root tee "$keyring_file" >/dev/null
+        temp_key="$(mktemp)"
+        curl -fsSL https://apt.releases.teleport.dev/gpg -o "$temp_key"
+        as_root install -m 0644 "$temp_key" "$keyring_file"
+        rm -f "$temp_key"
         printf '%s\n' "$repo_entry" | as_root tee /etc/apt/sources.list.d/teleport.list >/dev/null
       fi
 
@@ -313,7 +318,7 @@ else if type -q code-insiders
 end
 
 for brew_bin in /opt/homebrew/bin /usr/local/bin /home/linuxbrew/.linuxbrew/bin $HOME/.linuxbrew/bin
-    if test -d $brew_bin
+    if test -d "$brew_bin"
         fish_add_path --move --path $brew_bin
     end
 end
