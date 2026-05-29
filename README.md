@@ -15,3 +15,9 @@ The installer:
 - installs common CLI tools with Homebrew when available
 - installs the Teleport `tsh` client
 - works in GitHub Codespaces and other Debian/Ubuntu-based environments
+
+## Test without changing the machine
+
+```bash
+DOTFILES_DRY_RUN=1 ./install.sh
+```
