@@ -5,7 +5,7 @@ Cross-platform dotfiles bootstrap for GitHub Codespaces, Linux, Ubuntu, and macO
 ## Usage
 
 ```bash
-bash /tmp/workspace/Pavaningithub/dotfiles/install.sh
+./install.sh
 ```
 
 The installer:
