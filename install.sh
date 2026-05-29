@@ -365,18 +365,26 @@ install_fisher_plugins() {
   log "installing fish plugins"
   if ! fish -c 'functions -q fisher'; then
     if [ "$DRY_RUN" = "1" ]; then
-      printf '+ curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish -o %s\n' '/tmp/fisher.fish'
-      printf '+ fish -c %q\n' 'source /tmp/fisher.fish; and fisher install jorgebucaran/fisher'
+      printf '+ curl -fsSL --connect-timeout 30 --max-time 60 https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish -o %s\n' '/tmp/fisher.fish'
+      printf '+ timeout 120 fish -c %q\n' 'source /tmp/fisher.fish; and fisher install jorgebucaran/fisher'
     else
       fisher_file="$(mktemp)"
-      curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish -o "$fisher_file"
-      fish -c "source '$fisher_file'; and fisher install jorgebucaran/fisher"
+      if ! curl -fsSL --connect-timeout 30 --max-time 60 https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish -o "$fisher_file"; then
+        warn "failed to download fisher; skipping fish plugin installation"
+        rm -f "$fisher_file"
+        return 0
+      fi
+      if ! timeout 120 fish -c "source '$fisher_file'; and fisher install jorgebucaran/fisher"; then
+        warn "failed to bootstrap fisher; skipping fish plugin installation"
+        rm -f "$fisher_file"
+        return 0
+      fi
       rm -f "$fisher_file"
     fi
   fi
 
   for plugin in evanlucas/fish-kubectl-completions Ladicle/fish-kubectl-prompt; do
-    if ! run fish -c "fisher install ${plugin}"; then
+    if ! run timeout 120 fish -c "fisher install ${plugin}"; then
       warn "failed to install fish plugin ${plugin}"
     fi
   done
