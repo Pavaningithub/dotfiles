@@ -5,6 +5,7 @@ set -euo pipefail
 DRY_RUN="${DOTFILES_DRY_RUN:-0}"
 BREW_AVAILABLE=0
 BREW_BIN=""
+APT_PREREQS_INSTALLED=0
 PLATFORM=""
 DISTRO=""
 CODENAME=""
@@ -142,6 +143,10 @@ install_homebrew() {
 }
 
 install_apt_prereqs() {
+  if [ "$APT_PREREQS_INSTALLED" -eq 1 ]; then
+    return 0
+  fi
+
   ensure_sudo
   log "installing apt prerequisites"
   export DEBIAN_FRONTEND=noninteractive
@@ -156,6 +161,7 @@ install_apt_prereqs() {
     gnupg \
     lsb-release \
     unzip
+  APT_PREREQS_INSTALLED=1
 }
 
 install_fish() {
@@ -265,7 +271,9 @@ install_teleport() {
 
       as_root apt-get update
       if as_root apt-get install -y teleport; then
-        has_cmd tsh && return 0
+        if [ "$DRY_RUN" = "1" ] || has_cmd tsh; then
+          return 0
+        fi
       fi
 
       warn "apt-based Teleport installation failed; falling back to Homebrew when available."
@@ -279,6 +287,10 @@ install_teleport() {
     install_brew_formula teleport
   fi
 
+  if [ "$DRY_RUN" = "1" ]; then
+    return 0
+  fi
+
   has_cmd tsh || warn "tsh could not be installed automatically."
 }
 
@@ -289,7 +301,7 @@ write_fish_configuration() {
   local abbr_file="${fish_conf_dir}/dotfiles-abbr.fish"
 
   log "writing fish configuration"
-  run mkdir -p "$fish_conf_dir"
+  mkdir -p "$fish_conf_dir"
 
   cat >"$env_file" <<'EOF'
 # Managed by dotfiles/install.sh
