@@ -87,6 +87,14 @@ detect_platform() {
   esac
 }
 
+brew_candidate_paths() {
+  printf '%s\n' \
+    /opt/homebrew/bin/brew \
+    /usr/local/bin/brew \
+    /home/linuxbrew/.linuxbrew/bin/brew \
+    "$HOME/.linuxbrew/bin/brew"
+}
+
 brew_shellenv_path() {
   if [ -n "$BREW_BIN" ]; then
     printf '%s' "$BREW_BIN"
@@ -99,18 +107,15 @@ brew_shellenv_path() {
     return 0
   fi
 
-  for candidate in \
-    /opt/homebrew/bin/brew \
-    /usr/local/bin/brew \
-    /home/linuxbrew/.linuxbrew/bin/brew \
-    "$HOME/.linuxbrew/bin/brew"
-  do
+  while IFS= read -r candidate; do
     if [ -x "$candidate" ]; then
       BREW_BIN="$candidate"
       printf '%s' "$BREW_BIN"
       return 0
     fi
-  done
+  done <<EOF
+$(brew_candidate_paths)
+EOF
 
   return 1
 }
@@ -304,9 +309,16 @@ write_fish_configuration() {
   local fish_conf_dir="${fish_config_dir}/conf.d"
   local env_file="${fish_conf_dir}/dotfiles-env.fish"
   local abbr_file="${fish_conf_dir}/dotfiles-abbr.fish"
+  local brew_candidates=""
 
   log "writing fish configuration"
   mkdir -p "$fish_conf_dir"
+
+  while IFS= read -r candidate; do
+    brew_candidates="${brew_candidates} ${candidate}"
+  done <<EOF
+$(brew_candidate_paths)
+EOF
 
   cat >"$env_file" <<'EOF'
 # Managed by dotfiles/install.sh
@@ -323,13 +335,14 @@ if not set -q KUBE_EDITOR
     end
 end
 
-for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew /home/linuxbrew/.linuxbrew/bin/brew $HOME/.linuxbrew/bin/brew
+for brew_bin in __BREW_CANDIDATES__
     if test -x "$brew_bin"
         eval ("$brew_bin" shellenv)
         break
     end
 end
 EOF
+  perl -0pi -e 's#__BREW_CANDIDATES__#'"${brew_candidates}"'#g' "$env_file"
 
   cat >"$abbr_file" <<'EOF'
 # Managed by dotfiles/install.sh
@@ -352,6 +365,8 @@ EOF
 
 install_fisher_plugins() {
   has_cmd fish || return 0
+  local plugin
+  local fisher_file
 
   log "installing fish plugins"
   if ! fish -c 'functions -q fisher'; then
@@ -359,7 +374,6 @@ install_fisher_plugins() {
       printf '+ curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish -o %s\n' '/tmp/fisher.fish'
       printf '+ fish -c %q\n' 'source /tmp/fisher.fish; and fisher install jorgebucaran/fisher'
     else
-      local fisher_file
       fisher_file="$(mktemp)"
       curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish -o "$fisher_file"
       fish -c "source '$fisher_file'; and fisher install jorgebucaran/fisher"
@@ -367,7 +381,11 @@ install_fisher_plugins() {
     fi
   fi
 
-  run fish -c 'fisher install evanlucas/fish-kubectl-completions Ladicle/fish-kubectl-prompt'
+  for plugin in evanlucas/fish-kubectl-completions Ladicle/fish-kubectl-prompt; do
+    if ! run fish -c "fisher install ${plugin}"; then
+      warn "failed to install fish plugin ${plugin}"
+    fi
+  done
 }
 
 write_kubectl_completion() {
