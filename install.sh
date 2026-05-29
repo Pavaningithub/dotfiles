@@ -309,18 +309,13 @@ write_fish_configuration() {
   local fish_conf_dir="${fish_config_dir}/conf.d"
   local env_file="${fish_conf_dir}/dotfiles-env.fish"
   local abbr_file="${fish_conf_dir}/dotfiles-abbr.fish"
-  local brew_candidates=""
+  local brew_candidates
 
   log "writing fish configuration"
   mkdir -p "$fish_conf_dir"
+  brew_candidates="$(brew_candidate_paths | paste -sd' ' -)"
 
-  while IFS= read -r candidate; do
-    brew_candidates="${brew_candidates} ${candidate}"
-  done <<EOF
-$(brew_candidate_paths)
-EOF
-
-  cat >"$env_file" <<'EOF'
+  cat >"$env_file" <<EOF
 # Managed by dotfiles/install.sh
 
 if not set -q KUBE_EDITOR
@@ -335,14 +330,13 @@ if not set -q KUBE_EDITOR
     end
 end
 
-for brew_bin in __BREW_CANDIDATES__
-    if test -x "$brew_bin"
-        eval ("$brew_bin" shellenv)
+for brew_bin in ${brew_candidates}
+    if test -x "\$brew_bin"
+        eval ("\$brew_bin" shellenv)
         break
     end
 end
 EOF
-  perl -0pi -e 's#__BREW_CANDIDATES__#'"${brew_candidates}"'#g' "$env_file"
 
   cat >"$abbr_file" <<'EOF'
 # Managed by dotfiles/install.sh
