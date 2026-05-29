@@ -370,12 +370,12 @@ install_fisher_plugins() {
     else
       fisher_file="$(mktemp)"
       if ! curl -fsSL --connect-timeout 30 --max-time 60 https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish -o "$fisher_file"; then
-        warn "failed to download fisher; skipping fish plugin installation"
+        warn "failed to download fisher (timeout or network error); skipping fish plugin installation"
         rm -f "$fisher_file"
         return 0
       fi
       if ! timeout 120 fish -c "source '$fisher_file'; and fisher install jorgebucaran/fisher"; then
-        warn "failed to bootstrap fisher; skipping fish plugin installation"
+        warn "failed to bootstrap fisher (timeout or command error); skipping fish plugin installation"
         rm -f "$fisher_file"
         return 0
       fi
