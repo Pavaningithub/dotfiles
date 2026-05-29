@@ -311,15 +311,22 @@ write_fish_configuration() {
   cat >"$env_file" <<'EOF'
 # Managed by dotfiles/install.sh
 
-if type -q code
-    set -gx KUBE_EDITOR "code --wait"
-else if type -q code-insiders
-    set -gx KUBE_EDITOR "code-insiders --wait"
+if not set -q KUBE_EDITOR
+    if type -q code
+        set -gx KUBE_EDITOR "code --wait"
+    else if type -q code-insiders
+        set -gx KUBE_EDITOR "code-insiders --wait"
+    else if type -q vim
+        set -gx KUBE_EDITOR "vim"
+    else if type -q nano
+        set -gx KUBE_EDITOR "nano"
+    end
 end
 
-for brew_bin in /opt/homebrew/bin /usr/local/bin /home/linuxbrew/.linuxbrew/bin $HOME/.linuxbrew/bin
-    if test -d "$brew_bin"
-        fish_add_path --move --path "$brew_bin"
+for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew /home/linuxbrew/.linuxbrew/bin/brew $HOME/.linuxbrew/bin/brew
+    if test -x "$brew_bin"
+        eval ("$brew_bin" shellenv)
+        break
     end
 end
 EOF
